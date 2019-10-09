@@ -1,57 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import Client from "./Client";
 import ClientForm from "./ClientForm";
-import Counter from "./Counter";
+// import Counter from "./Counter";
 
 import "./styles.css";
 
-class App extends React.Component {
-  state = {
-    clients: [
-      { id: 1, nom: "Lior Chamla" },
-      { id: 2, nom: "Magali Pernin" },
-      { id: 3, nom: "Joseph Durand" }
-    ]
-  };
+const App = () => {
+  const [clients, setClients] = useState([
+    { id: 1, nom: "Lior Chamla" },
+    { id: 2, nom: "Magali Pernin" },
+    { id: 3, nom: "Joseph Durand" }
+  ]);
 
-  handleDelete = id => {
-    const clients = [...this.state.clients];
+  // DELETE CLIENT
+  const handleDelete = id => {
+    const updatedClients = [...clients]; // copier le tableau clients
     const index = clients.findIndex(client => client.id === id);
 
-    clients.splice(index, 1);
+    updatedClients.splice(index, 1);
 
-    this.setState({ clients });
+    setClients(updatedClients);
   };
 
-  handleAdd = client => {
-    const clients = [...this.state.clients];
-    clients.push(client);
+  // ADD CLIENT
+  const handleAdd = client => {
+    const updatedClients = [...clients];
+    updatedClients.push(client);
 
-    this.setState({ clients });
+    setClients(updatedClients);
   };
 
-  render() {
-    const title = "Liste des clients";
+  const title = "Liste des clients";
 
-    return (
-      <div>
-        <h1>{title}</h1>
-        <Counter />
-        <ul>
-          {this.state.clients.map(client => (
-            <Client
-              key={client.id}
-              details={client}
-              onDelete={this.handleDelete}
-            />
-          ))}
-        </ul>
-        <ClientForm onClientAdd={this.handleAdd} />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <h1>{title}</h1>
+      {/* <Counter /> */}
+      <ul>
+        {clients.map(client => (
+          <Client key={client.id} details={client} onDelete={handleDelete} />
+        ))}
+      </ul>
+      <ClientForm onClientAdd={handleAdd} />
+    </div>
+  );
+};
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
